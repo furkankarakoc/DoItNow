@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GoalItem: Identifiable {
+struct GoalItem: Identifiable, Codable {
     var id = UUID()
     var title: String
     var description: String
@@ -16,7 +16,28 @@ struct GoalItem: Identifiable {
 }
 
 class GoalsViewModel: ObservableObject {
-    @Published var goals: [GoalItem] = []
+    @Published var goals: [GoalItem] = [] {
+        didSet {
+            saveGoals()
+        }
+    }
+    
+    init() {
+        loadGoals()
+    }
+    
+    func saveGoals() {
+        if let encodedData = try? JSONEncoder().encode(goals) {
+            UserDefaults.standard.set(encodedData, forKey: "savedGoals")
+        }
+    }
+    
+    func loadGoals() {
+        if let savedData = UserDefaults.standard.data(forKey: "savedGoals"),
+           let loadedGoals = try? JSONDecoder().decode([GoalItem].self, from: savedData) {
+            goals = loadedGoals
+        }
+    }
     
     func addGoal(title: String, description: String, deadline: Date) {
         let newGoal = GoalItem(title: title, description: description, deadline: deadline)
@@ -31,6 +52,10 @@ class GoalsViewModel: ObservableObject {
         if let index = goals.firstIndex(where: { $0.id == goal.id }) {
             goals[index].isCompleted.toggle()
         }
+    }
+    
+    func moveGoal(from source: IndexSet, to destination: Int) {
+        goals.move(fromOffsets: source, toOffset: destination)
     }
 }
 
@@ -69,6 +94,7 @@ struct GoalsView: View {
                     }
                 }
                 .onDelete(perform: viewModel.removeGoal)
+                .onMove(perform: viewModel.moveGoal)
             }
             .navigationTitle("Goals")
             .navigationBarItems(trailing:
