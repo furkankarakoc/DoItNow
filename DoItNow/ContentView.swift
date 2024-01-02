@@ -79,13 +79,15 @@ struct GoalsView: View {
                         Text("Deadline: \(formattedDate(date: goal.deadline))")
                             .font(.caption)
                             .foregroundColor(.gray)
-                            .padding(.top, 5)
+                            .padding(.top, 10)
                             .padding(.bottom, 10)
+                            .padding(.leading,15)
+                            .padding(.trailing,15)
                             .opacity(0.8)
                             .padding(.bottom, 5)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 2)
-                                    .stroke(Color.gray, lineWidth: 0.5)
+                                RoundedRectangle(cornerRadius: 3)
+                                    .stroke(Color.red, lineWidth: 1)
                             )
                             .padding(.bottom, 5)
                             .onTapGesture {
