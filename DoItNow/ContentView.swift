@@ -122,6 +122,7 @@ struct AddGoalView: View {
     @ObservedObject var viewModel: GoalsViewModel
     @State private var goalTitle = ""
     @State private var goalDescription = ""
+    @State private var goalAlarm = ""
     @State private var goalDeadline = Date()
     
     var body: some View {
@@ -130,6 +131,7 @@ struct AddGoalView: View {
                 Section(header: Text("Goal Details")) {
                     TextField("Title", text: $goalTitle)
                     TextField("Description", text: $goalDescription)
+                    TextField("Alarm", text: $goalAlarm)
                     DatePicker("Deadline", selection: $goalDeadline, displayedComponents: .date)
                 }
                 Section {
