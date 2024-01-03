@@ -125,6 +125,9 @@ struct AddGoalView: View {
     @State private var goalAlarm = ""
     @State private var goalDeadline = Date()
     
+    let reminderSounds = ["Sound 1", "Sound 2", "Sound 3"]
+    @State private var selectedReminderSound = "Sound 1"
+
     var body: some View {
         NavigationView {
             Form {
@@ -133,11 +136,18 @@ struct AddGoalView: View {
                     TextField("Description", text: $goalDescription)
                     TextField("Alarm", text: $goalAlarm)
                     DatePicker("Deadline", selection: $goalDeadline, displayedComponents: .date)
+                    
+                    Picker("Reminder Sound", selection: $selectedReminderSound) {
+                        ForEach(reminderSounds, id: \.self) { sound in
+                            Text(sound).tag(sound)
+                        }
+                    }
                 }
                 Section {
                     Button("Add Goal") {
                         viewModel.addGoal(title: goalTitle, description: goalDescription, deadline: goalDeadline)
                         isPresented = false
+                        
                     }
                 }
             }
@@ -158,9 +168,4 @@ struct DoItNow: App {
             ContentView()
         }
     }
-}
-
-
-#Preview {
-    ContentView()
 }
